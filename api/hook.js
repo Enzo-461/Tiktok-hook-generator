@@ -13,19 +13,24 @@ export default async function handler(req, res) {
         messages: [
           {
             role: "user",
-            content: `Gib mir 3 virale TikTok Hook-Ideen zum Thema: "${topic}". Kurz, knackig, auf Deutsch.`,
+            content: `Gib mir 3 virale TikTok Hook-Ideen zum Thema: "${topic}". Jede Hook sollte maximal einen Satz lang sein und super aufmerksamkeitsstark sein. Antworte auf Deutsch.`,
           },
         ],
-        max_tokens: 200,
-        temperature: 0.8,
+        max_tokens: 300,
+        temperature: 0.9,
       }),
     });
 
     const data = await response.json();
-    const hooks = data.choices[0].message.content;
+    const hooks = data.choices?.[0]?.message?.content;
+
+    if (!hooks) {
+      return res.status(500).json({ error: "Keine Hooks empfangen." });
+    }
 
     res.status(200).json({ hooks });
   } catch (error) {
+    console.error("API Fehler:", error);
     res.status(500).json({ error: "Fehler beim Generieren der Hooks." });
   }
 }
