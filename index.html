@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GPT-4 TikTok Hook Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      padding: 40px;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      width: 80%;
+      max-width: 400px;
+    }
+    #result {
+      margin-top: 20px;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <h2>GPT-4 TikTok Hook Generator</h2>
+  <input type="text" id="topicInput" placeholder="Thema eingeben..." />
+  <br>
+  <button onclick="generateHooks()">Hooks generieren</button>
+  <div id="result"></div>
+
+  <script>
+    async function generateHooks() {
+      const topic = document.getElementById("topicInput").value;
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "Lade Hooks...";
+
+      try {
+        const response = await fetch("/api/hook", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ topic }),
+        });
+
+        const data = await response.json();
+        resultDiv.innerHTML = data.hooks.replace(/\n/g, "<br>");
+      } catch (error) {
+        resultDiv.innerHTML = "Fehler beim Laden der Hooks.";
+      }
+    }
+  </script>
+</body>
+</html>
